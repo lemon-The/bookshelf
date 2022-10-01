@@ -1,0 +1,19 @@
+#spring.datasource.generate-unique-name=false
+#spring.datasource.name=books
+##spring.jpa.hibernate.ddl-auto=none
+##spring.jpa.hibernate.ddl-auto=updateH
+##spring.jpa.generate-ddl=true
+##spring.jpa.hibernate.ddl-auto=fasle
+#spring.datasource.initialize=true
+#spring.jpa.hibernate.ddl-auto=none
+#spring.jpa.hibernate.ddl-auto=none
+#spring.jpa.properties.hibernate.jdbc.lob.non_contextual_creation=true
+#spring.session.jdbc.initialize-schema=always
+#spring.sql.init.data-locations=classpath:schema.sql,classpath:data.sql
+spring:
+  datasource:
+    generate-unique-name: false
+    name: bookshelf
+  jpa:
+    #defer-datasource-initialization: true
+    hibernate.ddl-auto: none

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>Main</title>
+    <link rel="stylesheet" th:href="@{/books.css}" />
+    </head>
+  <body>
+    <header>
+      <div>
+        <img src="images/books3.jpg" alt="STSM logo" title="STSM logo" 
+             th:src="@{/images/books3.jpg}" th:alt-title="#{title.application}"/>
+      </div>
+      <div id="bookshelf">
+        <h1>BOOKSHELF</h1>
+        <form th:action="@{/}"><button>Books</button></form>
+        <form th:action="@{/authors}"><button>Authors</button></form>
+        <form th:action="@{/genres}"><button>Genres</button></form>
+      </div>
+    </header>
+    <form th:object="${new_author}" method="POST">
+      <h2>Add new author</h2>
+      <fieldset>
+        <legend>New author</legend>
+        <div>
+          <label for="name">Name</label>
+          <input id="name" type="text" th:field="*{name}"/>
+          <span class="validation_error" th:if="${#fields.hasErrors('name')}", th:errors="*{name}"></span>
+        </div>
+        <div>
+          <label for="birhtday">Parent</label>
+          <input id="birhtday" type="date" th:field="*{birthDay}"/>
+          <span class="validation_error" th:if="${#fields.hasErrors('birthDay')}", th:errors="*{birthDay}"></span>
+        </div>
+        <div class="submit">
+          <button type="submit" name="save">Add</button>
+        </div>
+      </fieldset>
+    </form>
+
+    <div class="booklist">
+      <h2>Author list</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Birthday</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="authori : ${all_authors}">
+            <td th:text="${authori.name}"></td>
+            <td th:text="${authori.birthDay}"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </body>
+</html>

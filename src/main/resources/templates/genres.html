@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>Main</title>
+    <link rel="stylesheet" th:href="@{/books.css}" />
+    </head>
+  <body>
+    <header>
+      <div>
+        <img src="images/books3.jpg" alt="STSM logo" title="STSM logo" 
+             th:src="@{/images/books3.jpg}" th:alt-title="#{title.application}"/>
+      </div>
+      <div id="bookshelf">
+        <h1>BOOKSHELF</h1>
+        <form th:action="@{/}"><button>Books</button></form>
+        <form th:action="@{/authors}"><button>Authors</button></form>
+        <form th:action="@{/genres}"><button>Genres</button></form>
+      </div>
+    </header>
+    <form th:object="${new_genre}" method="POST">
+      <h2>Add new genre</h2>
+      <fieldset>
+        <legend>New genre</legend>
+        <div>
+          <label for="name">Name</label>
+          <input id="name" type="text" th:field="*{name}"/>
+          <span class="validation_error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+        </div>
+        <div>
+          <label for="parent">Parent</label>
+          <select th:field="*{parent}" id="parent">
+            <option th:text="root" th:value="null"></option>
+            <option th:each="genrei : ${all_genres}" th:value="${genrei.id}" th:text="${genrei.name}"></option>
+          </select>
+          <span class="validation_error" th:if="${#fields.hasErrors('parent')}" th:errors="*{parent}"></span>
+        </div>
+        <div class="submit">
+          <button type="submit" name="save">Add</button>
+        </div>
+      </fieldset>
+    </form>
+
+    <div class="booklist">
+      <h2>Genre list</h2>
+      <form th:action="@{/genres}">
+        <select th:name="genre_id">
+          <option th:text="all" th:value="null"></option>
+          <option th:each="gnr : ${all_genres}" th:text="${gnr.name}" th:value="${gnr.id}"></option>
+        </select>
+        <button type="submit" name="filter">Add</button>
+      </form>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Parent</th>
+            <th>Subgenres</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="genrei : ${genres_list}">
+            <td th:text="${genrei.name}"></td>
+            <td th:text="${genrei.parent.name}" th:if="${genrei.parent}"></td>
+            <td th:text="Root" th:unless="${genrei.parent}"></td>
+            <td>
+              <table>
+                <tr th:each="sub : ${genrei.subgenres}">
+                  <td th:text="${sub.name}"></td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </body>
+</html>
