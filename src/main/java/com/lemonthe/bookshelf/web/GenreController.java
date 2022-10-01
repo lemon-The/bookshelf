@@ -39,7 +39,6 @@ public class GenreController {
         repo.findAll().forEach(i -> genres.add(i));
         return genres;
     }
-
     @ModelAttribute(name = "new_genre")
     public Genre newGenreModel() {
         return new Genre();
@@ -49,38 +48,32 @@ public class GenreController {
     public String genreGetMethod(
             @RequestParam(name = "genre_id", required = false) Long genre_id,
             Model model) {
-        List<Genre> genres = new LinkedList<>();
-        repo.findAll().forEach(i -> genres.add(i));
+        List<Genre> allGenres = new LinkedList<>();
+        repo.findAll().forEach(i -> allGenres.add(i));
         if (genre_id != null) {
-            List<Genre> res = new LinkedList<>();
-            for (Genre genre : genres) {
+            List<Genre> reduced = new LinkedList<>();
+            for (Genre genre : allGenres) {
                 if (genre.getId() == genre_id) {
-                    recurs(res, genre);
+                    addAllSubgenresToList(genre, reduced);
                 }
             }
-            logger.info("Genres: " + genres);
-            model.addAttribute("genres_list", res);
+            logger.info("Genres: " + allGenres);
+            model.addAttribute("genres_list", reduced);
         } else {
-            model.addAttribute("genres_list", genres);
+            model.addAttribute("genres_list", allGenres);
         }
         return "genres";
     }
 
-    private void recurs(List<Genre> genres, Genre node) {
-        if (node == null)
+    private void addAllSubgenresToList(Genre current, List<Genre> list) {
+        if (current == null)
             return;
-        genres.add(node);
-        if (node.getSubgenres() == null)
+        list.add(current);
+        if (current.getSubgenres() == null)
             return;
-        for (Genre chld : node.getSubgenres())
-            recurs(genres, chld);
+        for (Genre sub : current.getSubgenres())
+            addAllSubgenresToList(sub, list);
     }
-
-    //@GetMapping
-    //public String getGenrePage() {
-    //    logger.info(getClass().getName() + "GET request");
-    //    return "genres";
-    //}
 
     @PostMapping
     public String genrePostMethod(@Valid Genre newGenre, Errors errors) {

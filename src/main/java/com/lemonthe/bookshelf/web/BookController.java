@@ -33,92 +33,43 @@ import org.slf4j.LoggerFactory;
 //add validation
 //clean up code at all
 @Controller
-@RequestMapping("/")
-public class HomeController {
+@RequestMapping("/books")
+public class BookController {
     @Autowired
-    GenreRepository repo;
+    private GenreRepository genreRepo;
     @Autowired
-    BookRepository bookRepo;
+    private BookRepository bookRepo;
     @Autowired
-    AuthorRepository authorRepository;
-    Logger logger;
+    private AuthorRepository authorRepo;
+    private Logger logger;
 
-    public HomeController(BookRepository bookRepo, GenreRepository repo,
-            AuthorRepository authorRepository) {
-        this.repo = repo;
+    public BookController(BookRepository bookRepo, GenreRepository genreRepo,
+            AuthorRepository authorRepo) {
+        this.genreRepo = genreRepo;
         this.bookRepo = bookRepo;
-        this.authorRepository = authorRepository;
-        this.logger = LoggerFactory.getLogger(HomeController.class);
+        this.authorRepo = authorRepo;
+        this.logger = LoggerFactory.getLogger(BookController.class);
     }
 
-    @ModelAttribute(name = "authors")
-    public List<Author> authorsModel() {
+    @ModelAttribute(name = "all_authors")
+    public List<Author> allAuthorsModel() {
         List<Author> authors = new LinkedList<>();
-        authorRepository.findAll().forEach(i -> authors.add(i));
+        authorRepo.findAll().forEach(i -> authors.add(i));
         return authors;
     }
-
-    //@ModelAttribute(name = "genre")
-    //public Genre genreMode() {
-    //    return new Genre();
-    //}
-
-    //@ModelAttribute(name = "author")
-    //public Author authorModel() {
-    //    return new Author();
-    //}
-
-    @ModelAttribute(name = "book")
-    public Book bookModel() {
+    @ModelAttribute(name = "all_genres")
+    public List<Genre> allGenresModel() {
+        List<Genre> genres = new LinkedList<>();
+        genreRepo.findAll().forEach(i -> genres.add(i));
+        return genres;
+    }
+    @ModelAttribute(name = "new_book")
+    public Book newBookModel() {
         return new Book();
     }
 
-    @ModelAttribute(name = "all_genres")
-    public List<Genre> allGenres() {
-        List<Genre> genres = new LinkedList<>();
-        repo.findAll().forEach(i -> genres.add(i));
-        return genres;
-    }
-
-    //@GetMapping("/genres")
-    //public String genreGetMethod(
-    //        @RequestParam(name = "genre_id", required = false) Long genre_id,
-    //        Model model) {
-    //    List<Genre> genres = new LinkedList<>();
-    //    repo.findAll().forEach(i -> genres.add(i));
-    //    boolean isSuitable = false;
-    //    if (genre_id != null) {
-    //        List<Genre> res = new LinkedList<>();
-    //        for (Genre genre : genres) {
-    //            if (genre.getId() == genre_id) {
-    //                recurs(res, genre);
-    //            }
-    //        }
-    //        logger.info("Genres: " + genres);
-    //        model.addAttribute("genres", res);
-    //    } else {
-    //        model.addAttribute("genres", genres);
-    //    }
-    //    return "genres";
-    //}
-
-    //private void recurs(List<Genre> genres, Genre node) {
-    //    if (node == null)
-    //        return;
-    //    genres.add(node);
-    //    if (node.getSubgenres() == null)
-    //        return;
-    //    for (Genre chld : node.getSubgenres())
-    //        recurs(genres, chld);
-    //}
-
-    //@GetMapping("/authors")
-    //public String authorGetMethod() {
-    //    return "authors";
-    //}
-
-    @GetMapping("/books")
-    public String booksGetMethod(
+    @GetMapping
+    public String bookGetMethod(
             @RequestParam(name = "author_id", required = false) Long author_id,
             @RequestParam(name = "genre_id", required = false) Long genre_id,
             Model model) {
@@ -165,11 +116,6 @@ public class HomeController {
         return "books";
     }
 
-    @GetMapping
-    public String rootGetMethod() {
-        return "redirect:/books";
-    }
-
     @PostMapping("/books")
     public String bookPostMethod(@Valid Book newBook, Errors errors) {
         if (errors.hasErrors())
@@ -178,20 +124,4 @@ public class HomeController {
         logger.info("Book: " + newBook.getTitle() + " is saved");
         return "redirect:/books";
     }
-    //@PostMapping("/genres")
-    //public String genrePostMethod(@Valid Genre newGenre, Errors errors) {
-    //    if (errors.hasErrors())
-    //        return "genres";
-    //    repo.save(newGenre);
-    //    logger.info("Genre: " + newGenre.getName() + " is saved");
-    //    return "redirect:/genres";
-    //}
-    //@PostMapping("/authors")
-    //public String authorPostMethod(@Valid Author newAuthor, Errors errors) {
-    //    if (errors.hasErrors())
-    //        return "authors";
-    //    authorRepository.save(newAuthor);
-    //    logger.info("Author: " + newAuthor.getName() + " is saved");
-    //    return "redirect:/authors";
-    //}
 }

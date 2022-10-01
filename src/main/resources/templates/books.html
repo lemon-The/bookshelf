@@ -13,12 +13,12 @@
       </div>
       <div id="bookshelf">
         <h1>BOOKSHELF</h1>
-        <form th:action="@{/}"><button>Books</button></form>
+        <form th:action="@{/books}"><button>Books</button></form>
         <form th:action="@{/authors}"><button>Authors</button></form>
         <form th:action="@{/genres}"><button>Genres</button></form>
       </div>
     </header>
-    <form th:object="${book}" method="POST">
+    <form th:object="${new_book}" method="POST">
       <h2>Add new book</h2>
       <fieldset>
         <legend>New book</legend>
@@ -46,7 +46,7 @@
         <div>
           <label for="author">Authors</label>
           <select role="combobox" th:field="*{authors}" multiple id="author">
-            <option th:each="author : ${authors}" th:value="${author.id}" th:text="${author.name}"></option>
+            <option th:each="author : ${all_authors}" th:value="${author.id}" th:text="${author.name}"></option>
           </select>
           <span class="validation_error" th:if="${#fields.hasErrors('authors')}" th:errors="*{authors}"></span>
         </div>
@@ -57,11 +57,10 @@
     </form>
 
     <div class="booklist">
-      <h2>Book list</h2>
-      <form th:action="@{/books}">
+      <h2>Book list</h2> <form th:action="@{/books}">
         <select th:name="author_id">
           <option th:text="all" th:value="null"></option>
-          <option th:each="autr : ${authors}" th:text="${autr.name}" th:value="${autr.id}"></option>
+          <option th:each="autr : ${all_authors}" th:text="${autr.name}" th:value="${autr.id}"></option>
         </select>
         <select th:name="genre_id">
           <option th:text="all" th:value="null"></option>
