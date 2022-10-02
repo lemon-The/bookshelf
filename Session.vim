@@ -28,15 +28,15 @@ badd +2 pom.xml
 badd +39 ../../planes/planes/pom.xml
 badd +18 src/main/resources/application.yml
 badd +8 src/main/resources/templates/home.html
-badd +89 src/main/java/com/lemonthe/bookshelf/web/HomeController.java
+badd +1 src/main/java/com/lemonthe/bookshelf/web/HomeController.java
 badd +67 ~/.config/nvim/init.vim
 badd +42 src/main/resources/templates/books.html
 badd +42 src/main/resources/templates/authors.html
 badd +49 src/main/resources/templates/genres.html
+badd +0 src/main/java/com/lemonthe/bookshelf/web/BookController.java
 argglobal
 %argdel
 $argadd src/main/resources/schema.sql
-tabnew +setlocal\ bufhidden=wipe
 tabnew +setlocal\ bufhidden=wipe
 tabnew +setlocal\ bufhidden=wipe
 tabrewind
@@ -75,11 +75,11 @@ setlocal fdn=20
 setlocal fen
 silent! normal! zE
 let &fdl = &fdl
-let s:l = 26 - ((9 * winheight(0) + 5) / 11)
+let s:l = 27 - ((10 * winheight(0) + 5) / 11)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 26
+keepjumps 27
 normal! 013|
 wincmd w
 argglobal
@@ -132,9 +132,9 @@ exe '1resize ' . ((&lines * 11 + 19) / 38)
 exe '2resize ' . ((&lines * 11 + 19) / 38)
 exe '3resize ' . ((&lines * 11 + 19) / 38)
 tabnext
-edit src/main/java/com/lemonthe/bookshelf/web/HomeController.java
+edit src/main/java/com/lemonthe/bookshelf/web/BookController.java
 argglobal
-balt src/main/resources/templates/home.html
+balt src/main/java/com/lemonthe/bookshelf/Author.java
 setlocal fdm=manual
 setlocal fde=0
 setlocal fmr={{{,}}}
@@ -145,16 +145,34 @@ setlocal fdn=20
 setlocal fen
 silent! normal! zE
 let &fdl = &fdl
-let s:l = 152 - ((34 * winheight(0) + 17) / 35)
+let s:l = 51 - ((0 * winheight(0) + 17) / 35)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 152
-normal! 026|
+keepjumps 51
+normal! 0
 tabnext
-edit src/main/resources/templates/books.html
+edit src/main/resources/schema.sql
+let s:save_splitbelow = &splitbelow
+let s:save_splitright = &splitright
+set splitbelow splitright
+wincmd _ | wincmd |
+vsplit
+1wincmd h
+wincmd w
+let &splitbelow = s:save_splitbelow
+let &splitright = s:save_splitright
+wincmd t
+let s:save_winminheight = &winminheight
+let s:save_winminwidth = &winminwidth
+set winminheight=0
+set winheight=1
+set winminwidth=0
+set winwidth=1
+exe 'vert 1resize ' . ((&columns * 73 + 73) / 147)
+exe 'vert 2resize ' . ((&columns * 73 + 73) / 147)
 argglobal
-balt src/main/java/com/lemonthe/bookshelf/web/HomeController.java
+balt src/main/resources/data.sql
 setlocal fdm=manual
 setlocal fde=0
 setlocal fmr={{{,}}}
@@ -165,16 +183,19 @@ setlocal fdn=20
 setlocal fen
 silent! normal! zE
 let &fdl = &fdl
-let s:l = 42 - ((16 * winheight(0) + 17) / 35)
+let s:l = 18 - ((12 * winheight(0) + 17) / 35)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 42
-normal! 043|
-tabnext
-edit src/main/resources/templates/genres.html
+keepjumps 18
+normal! 02|
+wincmd w
 argglobal
-balt src/main/resources/templates/books.html
+if bufexists(fnamemodify("src/main/resources/data.sql", ":p")) | buffer src/main/resources/data.sql | else | edit src/main/resources/data.sql | endif
+if &buftype ==# 'terminal'
+  silent file src/main/resources/data.sql
+endif
+balt src/main/resources/schema.sql
 setlocal fdm=manual
 setlocal fde=0
 setlocal fmr={{{,}}}
@@ -185,25 +206,31 @@ setlocal fdn=20
 setlocal fen
 silent! normal! zE
 let &fdl = &fdl
-let s:l = 49 - ((12 * winheight(0) + 17) / 35)
+let s:l = 20 - ((18 * winheight(0) + 17) / 35)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 49
-normal! 038|
-tabnext 2
+keepjumps 20
+normal! 0
+wincmd w
+exe 'vert 1resize ' . ((&columns * 73 + 73) / 147)
+exe 'vert 2resize ' . ((&columns * 73 + 73) / 147)
+tabnext 3
 if exists('s:wipebuf') && len(win_findbuf(s:wipebuf)) == 0 && getbufvar(s:wipebuf, '&buftype') isnot# 'terminal'
   silent exe 'bwipe ' . s:wipebuf
 endif
 unlet! s:wipebuf
 set winheight=1 winwidth=20
 let &shortmess = s:shortmess_save
+let &winminheight = s:save_winminheight
+let &winminwidth = s:save_winminwidth
 let s:sx = expand("<sfile>:p:r")."x.vim"
 if filereadable(s:sx)
   exe "source " . fnameescape(s:sx)
 endif
 let &g:so = s:so_save | let &g:siso = s:siso_save
 set hlsearch
+nohlsearch
 doautoall SessionLoadPost
 unlet SessionLoad
 " vim: set ft=vim :

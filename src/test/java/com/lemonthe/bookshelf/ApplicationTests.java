@@ -33,51 +33,8 @@ class ApplicationTests {
 	@Test
     @Transactional
 	void contextLoads() {
-        List<Genre> genres = new LinkedList<>();
-        logger.warn("" + gRepo.count());
-        logger.info("TESTTEST");
-        System.out.println(genres);
 
-        logger.info("Saving gr");
-        Genre gr = createGenre1();
-        gr = gRepo.save(gr);
-        logger.info("GR saved");
-        gRepo.findAll().forEach(i -> genres.add(i));
-        for (Genre g : genres) {
-            System.out.println(g);
-        }
-        logger.info("" + gRepo.count());
-        Author ar = createAuthor1();
-        aRepo.save(ar);
 
-        List<Book> books = new ArrayList<>();
-        bRepo.findAll().forEach(i -> books.add(i));
-        for (Book b : books) {
-            System.out.println(b);
-        }
-        Book bk = createBook1();
-        bk.addGenre(gr);
-        bk.addAuthor(ar);
-        bRepo.save(bk);
-        books.clear();
-        bRepo.findAll().forEach(i -> books.add(i));
-        for (Book b : books) {
-            System.out.println(b);
-        }
-        logger.info("" + bRepo.count());
-
-        aRepo.findAll().forEach(i -> System.out.println(i));
-        System.out.println(new AuthorByIdConverter(aRepo).convert(1L));
-
-        //Genre gr = createGenre1();
-        //Author ar = createAuthor1();
-        //Book bk = createBook1();
-        ////gRepo.save(gr);
-        //aRepo.save(ar);
-
-        //bk.addGenre(genres.get(1));
-        //bk.addAuthor(ar);
-        //bRepo.save(bk);
 	}
     private Book createBook1() {
         Book bk = new Book();
@@ -96,7 +53,7 @@ class ApplicationTests {
                 + "изъятий, и составили серию \"Rugram-классика\"."
                 + "Вашему вниманию представляется книга Максима Горького "
                 + "\"Мои университеты\". ");
-        bk.setPages(200);
+
         return bk;
     }
     private Author createAuthor1() {

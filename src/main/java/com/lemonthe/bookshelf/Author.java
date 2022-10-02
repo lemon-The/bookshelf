@@ -20,7 +20,7 @@ public class Author implements Serializable {
     @Id
     @SequenceGenerator(name = "a_s", 
         sequenceName = "AUTHOR_SEQUENCE", 
-        initialValue = 3, allocationSize = 1)
+        initialValue = 1, allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "a_s")
     @Column(nullable = false)
     private Long id;

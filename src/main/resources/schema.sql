@@ -5,20 +5,41 @@ DROP TABLE IF EXISTS authors;
 DROP TABLE IF EXISTS books_genres;
 DROP TABLE IF EXISTS books_authors;
 CREATE SEQUENCE IF NOT EXISTS genre_sequence
-    START WITH 4
+    START WITH 1
     INCREMENT 1;
 CREATE SEQUENCE IF NOT EXISTS author_sequence
-    START WITH 3
+    START WITH 1
     INCREMENT 1;
 CREATE SEQUENCE IF NOT EXISTS book_sequence
-    START WITH 3
+    START WITH 1
     INCREMENT 1;
+CREATE SEQUENCE IF NOT EXISTS photo_sequence
+    START WITH 1
+    INCREMENT 1;
+CREATE SEQUENCE IF NOT EXISTS file_sequence
+    START WITH 1
+    INCREMENT 1;
+
+CREATE TABLE photos(
+    id INTEGER PRIMARY KEY,
+    photo_path VARCHAR(300)
+);
 
 CREATE TABLE books(
     id INTEGER PRIMARY KEY,
     title VARCHAR(60),
     annotation VARCHAR(1000),
-    pages INTEGER
+    photo_id INTEGER,
+    CONSTRAINT fk_books_photo FOREIGN KEY(photo_id)
+        REFERENCES photos(id)
+);
+
+CREATE TABLE files(
+    id INTEGER PRIMARY KEY,
+    file_path VARCHAR(300),
+    book_id INTEGER,
+    CONSTRAINT fk_files_book FOREIGN KEY(book_id)
+        REFERENCES books(id)
 );
 
 CREATE TABLE genres(

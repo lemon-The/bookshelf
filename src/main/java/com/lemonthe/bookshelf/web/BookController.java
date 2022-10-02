@@ -1,5 +1,9 @@
 package com.lemonthe.bookshelf.web;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -10,9 +14,11 @@ import javax.validation.Valid;
 import com.lemonthe.bookshelf.Author;
 import com.lemonthe.bookshelf.Book;
 import com.lemonthe.bookshelf.Genre;
+import com.lemonthe.bookshelf.Photo;
 import com.lemonthe.bookshelf.data.AuthorRepository;
 import com.lemonthe.bookshelf.data.BookRepository;
 import com.lemonthe.bookshelf.data.GenreRepository;
+import com.lemonthe.bookshelf.data.PhotoRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,9 +29,15 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 //TODO
+//find out about Spring Service
+//Correct photo names and directories
+//
+//
+//
 //add modification mode
 //add photo
 //add file
@@ -35,19 +47,19 @@ import org.slf4j.LoggerFactory;
 @Controller
 @RequestMapping("/books")
 public class BookController {
-    @Autowired
     private GenreRepository genreRepo;
-    @Autowired
     private BookRepository bookRepo;
-    @Autowired
     private AuthorRepository authorRepo;
+    private PhotoRepository photoRepo;
     private Logger logger;
 
+    @Autowired
     public BookController(BookRepository bookRepo, GenreRepository genreRepo,
-            AuthorRepository authorRepo) {
+            AuthorRepository authorRepo, PhotoRepository photoRepo) {
         this.genreRepo = genreRepo;
         this.bookRepo = bookRepo;
         this.authorRepo = authorRepo;
+        this.photoRepo = photoRepo;
         this.logger = LoggerFactory.getLogger(BookController.class);
     }
 
@@ -116,10 +128,29 @@ public class BookController {
         return "books";
     }
 
-    @PostMapping("/books")
-    public String bookPostMethod(@Valid Book newBook, Errors errors) {
-        if (errors.hasErrors())
+    @PostMapping("/upload")
+    public String bookPostMethod(
+            @RequestParam(name = "new_photo", required = false) MultipartFile file,
+            @Valid Book newBook, Errors errors) throws IOException {
+        logger.info("POOOOOST");
+        if (errors.hasErrors()) {
+            logger.info(errors.getErrorCount() + "");
+            logger.info(errors.getNestedPath());
+            logger.info(errors.getObjectName());
+            logger.info(errors.toString());
             return "books";
+        }
+        logger.info("POOOOOST 1");
+        Path fileName = Paths.get(file.getOriginalFilename());
+        Files.write(fileName, file.getBytes());
+
+        Photo newPhoto = new Photo();
+        newPhoto.setPath(fileName);
+        photoRepo.save(newPhoto);
+
+
+        newBook.setPhoto(newPhoto);
+        logger.info("POOOOOST 2");
         bookRepo.save(newBook);
         logger.info("Book: " + newBook.getTitle() + " is saved");
         return "redirect:/books";

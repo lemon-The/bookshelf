@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
@@ -28,7 +29,7 @@ public class Book implements Serializable {
     @Id
     @SequenceGenerator(name = "b_s", 
         sequenceName = "BOOK_SEQUENCE", 
-        initialValue = 3, allocationSize = 1)
+        initialValue = 1, allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "b_s")
     //@GeneratedValue(generator = "sequence-generator")
     //@GenericGenerator(
@@ -45,7 +46,10 @@ public class Book implements Serializable {
     @NotEmpty(message = "Book title is required")
     private String title;
     private String annotation;
-    private int pages;
+    //private int pages;
+    @ManyToOne
+    @JoinColumn(name = "PHOTO_ID", referencedColumnName = "ID")
+    private Photo photo;
     @NotNull(message = "Book genre is required")
     @ManyToMany
     @JoinTable(name = "BOOKS_GENRES",
@@ -58,6 +62,7 @@ public class Book implements Serializable {
             joinColumns = @JoinColumn(name = "BOOK_ID"),
             inverseJoinColumns = @JoinColumn(name = "AUTHOR_ID"))
     private List<Author> authors = new LinkedList<>();
+    
 
     public void addGenre(Genre genre) {
         genres.add(genre);
@@ -76,14 +81,14 @@ public class Book implements Serializable {
     public void setAnnotation(String annotation) {
         this.annotation = annotation;
     }
-    public void setPages(int pages) {
-        this.pages = pages;
-    }
     public void setGenres(List<Genre> genres) {
         this.genres = genres;
     }
     public void setAuthors(List<Author> authors) {
         this.authors = authors;
+    }
+    public void setPhoto(Photo photo) {
+        this.photo = photo;
     }
     ////////////////////////////////////////////////////////////    
     public long getId() {
@@ -95,14 +100,14 @@ public class Book implements Serializable {
     public String getAnnotation() {
         return this.annotation;
     }
-    public int getPages() {
-        return this.pages;
-    }
     public List<Genre> getGenres() {
         return this.genres;
     }
     public List<Author> getAuthors() {
         return this.authors;
+    }
+    public Photo getPhoto() {
+        return this.photo;
     }
     ////////////////////////////////////////////////////////////
     @Override
@@ -117,22 +122,22 @@ public class Book implements Serializable {
         return id == other.id
             && Objects.equals(title, other.title)
             && Objects.equals(annotation, other.annotation)
-            && pages == other.pages
             && Objects.equals(genres, other.genres)
-            && Objects.equals(authors, other.authors);
+            && Objects.equals(authors, other.authors)
+            && Objects.equals(photo, other.photo);
     }
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, annotation, pages, genres,
-                authors);
+        return Objects.hash(id, title, annotation, genres,
+                authors, photo);
     }
     @Override
     public String toString() {
         return getClass().getName() + "[id=" + id
             + ", title=" + title
             + ", annotation=" + annotation
-            + ", pages=" + pages
             + ", genres=" + genres
+            + ", photo=" + photo
             + ", authors=" + authors + "]";
     }
 }

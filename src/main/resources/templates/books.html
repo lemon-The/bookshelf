@@ -18,7 +18,7 @@
         <form th:action="@{/genres}"><button>Genres</button></form>
       </div>
     </header>
-    <form th:object="${new_book}" method="POST">
+    <form th:object="${new_book}" method="POST" th:action="@{/books/upload}" enctype="multipart/form-data">
       <h2>Add new book</h2>
       <fieldset>
         <legend>New book</legend>
@@ -32,9 +32,8 @@
           <textarea id="annotation" th:field="*{annotation}"></textarea>
         </div>
         <div>
-          <label for="pages">Pages</label>
-          <input id="pages" type="number" min="0" th:field="*{pages}"/>
-          <span class="validation_error" th:if="${#fields.hasErrors('pages')}" th:errors="*{pages}"></span>
+          <label for="new_photo">Photo</label>
+          <input type="file" id="new_photo" accept="images/*" th:name="new_photo"></input>
         </div>
         <div>
           <label for="genre">Genres</label>
@@ -57,7 +56,8 @@
     </form>
 
     <div class="booklist">
-      <h2>Book list</h2> <form th:action="@{/books}">
+      <h2>Book list</h2> 
+      <form th:action="@{/books}">
         <select th:name="author_id">
           <option th:text="all" th:value="null"></option>
           <option th:each="autr : ${all_authors}" th:text="${autr.name}" th:value="${autr.id}"></option>
@@ -80,7 +80,6 @@
         <tbody>
           <tr th:each="booki : ${books}">
             <td th:text="${booki.title}"></td>
-            <td th:text="${booki.pages}"></td>
             <td>
               <table>
                 <tr th:each="author : ${booki.authors}">

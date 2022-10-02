@@ -26,7 +26,7 @@ public class Genre implements Serializable {
     @Id
     @SequenceGenerator(name = "g_s", 
         sequenceName = "GENRE_SEQUENCE", 
-        initialValue = 4, allocationSize = 1)
+        initialValue = 1, allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "g_s")
     //@GeneratedValue(generator = "sequence-generator")
     //@GenericGenerator(
@@ -96,7 +96,7 @@ public class Genre implements Serializable {
         if (getClass() != otherObject.getClass())
             return false;
         Genre other = (Genre)otherObject;
-        return id == other.id
+        return Objects.equals(id, other.id)
             && Objects.equals(name, other.name)
             && Objects.equals(parent, other.parent)
             && Objects.equals(subgenres, other.subgenres);
