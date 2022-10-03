@@ -9,8 +9,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class AuthorByIdConverter implements Converter<Long, Author>{
-    @Autowired
     private AuthorRepository repo;
+    @Autowired
     public AuthorByIdConverter(AuthorRepository repo) {
         this.repo = repo;
     }

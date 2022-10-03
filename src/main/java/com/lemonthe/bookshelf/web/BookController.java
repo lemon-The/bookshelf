@@ -50,16 +50,18 @@ public class BookController {
     private GenreRepository genreRepo;
     private BookRepository bookRepo;
     private AuthorRepository authorRepo;
-    private PhotoRepository photoRepo;
+    private BookService bookService;
+    //private PhotoRepository photoRepo;
     private Logger logger;
 
     @Autowired
     public BookController(BookRepository bookRepo, GenreRepository genreRepo,
-            AuthorRepository authorRepo, PhotoRepository photoRepo) {
+            AuthorRepository authorRepo, BookService bookService/*, PhotoRepository photoRepo*/) {
         this.genreRepo = genreRepo;
         this.bookRepo = bookRepo;
         this.authorRepo = authorRepo;
-        this.photoRepo = photoRepo;
+        this.bookService = bookService;
+        //this.photoRepo = photoRepo;
         this.logger = LoggerFactory.getLogger(BookController.class);
     }
 
@@ -86,6 +88,7 @@ public class BookController {
             @RequestParam(name = "genre_id", required = false) Long genre_id,
             Model model) {
         List<Book> books = new LinkedList<>();
+        List<Photo> photos = new LinkedList<>();
         bookRepo.findAll().forEach(i -> books.add(i));
         boolean isSuitable = false;
         if (author_id != null){
@@ -124,13 +127,15 @@ public class BookController {
                 }
             }
         }
+        books.forEach(i -> photos.add(i.getPhoto()));
         model.addAttribute("books", books);
+        model.addAttribute("photos", photos);
         return "books";
     }
 
     @PostMapping("/upload")
     public String bookPostMethod(
-            @RequestParam(name = "new_photo", required = false) MultipartFile file,
+            @RequestParam(name = "new_photo", required = false) MultipartFile photo,
             @Valid Book newBook, Errors errors) throws IOException {
         logger.info("POOOOOST");
         if (errors.hasErrors()) {
@@ -141,17 +146,7 @@ public class BookController {
             return "books";
         }
         logger.info("POOOOOST 1");
-        Path fileName = Paths.get(file.getOriginalFilename());
-        Files.write(fileName, file.getBytes());
-
-        Photo newPhoto = new Photo();
-        newPhoto.setPath(fileName);
-        photoRepo.save(newPhoto);
-
-
-        newBook.setPhoto(newPhoto);
-        logger.info("POOOOOST 2");
-        bookRepo.save(newBook);
+        bookService.saveBook(newBook, photo);
         logger.info("Book: " + newBook.getTitle() + " is saved");
         return "redirect:/books";
     }

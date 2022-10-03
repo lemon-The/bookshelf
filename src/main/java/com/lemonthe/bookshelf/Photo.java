@@ -48,6 +48,9 @@ public class Photo {
     public Path getPath() {
         return this.path;
     }
+    public Path getPhotoName() {
+        return this.path.getFileName();
+    }
     ////////////////////////////////////////////////////////////
     @Override
     public boolean equals(Object otherObject) {

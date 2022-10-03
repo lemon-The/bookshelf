@@ -9,7 +9,7 @@
     <header>
       <div>
         <img src="images/books3.jpg" alt="STSM logo" title="STSM logo" 
-             th:src="@{/images/books3.jpg}" th:alt-title="#{title.application}"/>
+             th:src="@{/images/books2.jpg}" th:alt-title="#{title.application}"/>
       </div>
       <div id="bookshelf">
         <h1>BOOKSHELF</h1>
@@ -71,14 +71,18 @@
       <table>
         <thead>
           <tr>
+            <th>Cover</th>
             <th>Title</th>
-            <th>Paes</th>
             <th>Authors</th>
             <th>Genres</th>
           </tr>
         </thead>
         <tbody>
           <tr th:each="booki : ${books}">
+            <td>
+              <img alt="book logo" title="book logo" 
+                th:src="@{/images/books_covers/${booki.photo.photoName}}"/>
+            </td>
             <td th:text="${booki.title}"></td>
             <td>
               <table>
