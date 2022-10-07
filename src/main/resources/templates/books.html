@@ -75,6 +75,7 @@
             <th>Title</th>
             <th>Authors</th>
             <th>Genres</th>
+            <th>Operations</th>
           </tr>
         </thead>
         <tbody>
@@ -99,6 +100,9 @@
                   <td th:text="${genre.name}"></td>
                 </tr>
               </table>
+            </td>
+            <td>
+              <a th:href="@{'/books/delete/' + ${booki.id}}">Delete</a>
             </td>
           </tr>
         </tbody>

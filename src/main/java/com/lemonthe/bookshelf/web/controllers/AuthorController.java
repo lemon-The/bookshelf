@@ -1,6 +1,7 @@
-package com.lemonthe.bookshelf.web;
+package com.lemonthe.bookshelf.web.controllers;
 
 import com.lemonthe.bookshelf.data.AuthorRepository;
+import com.lemonthe.bookshelf.web.services.AuthorService;
 import com.lemonthe.bookshelf.Author;
 
 import java.util.List;
@@ -72,6 +73,11 @@ public class AuthorController {
         modifiedAuthor.setId(id);
         logger.warn("AUTHOR ID:" + modifiedAuthor.getId());
         authorService.saveAuthor(modifiedAuthor);
+        return "redirect:/authors";
+    }
+    @GetMapping("/delete/{id}")
+    public String deleteAuthor(@PathVariable("id") Long id) {
+        authorService.deleteAuthorById(id);
         return "redirect:/authors";
     }
 }

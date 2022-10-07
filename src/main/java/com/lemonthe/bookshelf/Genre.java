@@ -1,5 +1,6 @@
 package com.lemonthe.bookshelf;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -57,8 +58,14 @@ public class Genre implements Serializable {
     @JoinColumn(name = "parent_id")
     private Genre parent;
 
+    @ManyToMany(mappedBy = "genres", cascade = CascadeType.ALL)
+    private List<Book> books;
+
     public void addSubgenre(Genre genre) {
         subgenres.add(genre);
+    }
+    public void addBook(Book book) {
+        this.books.add(book);
     }
     ////////////////////////////////////////////////////////////
     public void setId(Long id) {
@@ -73,6 +80,9 @@ public class Genre implements Serializable {
     public void setParent(Genre parent) {
         this.parent = parent;
     }
+    public void setBooks(List<Book> books) {
+        this.books = books;
+    }
     ////////////////////////////////////////////////////////////
     public Long getId() {
         return this.id;
@@ -85,6 +95,9 @@ public class Genre implements Serializable {
     }
     public Genre getParent() {
         return this.parent;
+    }
+    public List<Book> getBooks() {
+        return this.books;
     }
     ////////////////////////////////////////////////////////////
     @Override
@@ -99,11 +112,12 @@ public class Genre implements Serializable {
         return Objects.equals(id, other.id)
             && Objects.equals(name, other.name)
             && Objects.equals(parent, other.parent)
-            && Objects.equals(subgenres, other.subgenres);
+            && Objects.equals(subgenres, other.subgenres)
+            && Objects.equals(books, other.books);
     }
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, parent, subgenres);
+        return Objects.hash(id, name, parent, subgenres, books);
     }
     @Override
     public String toString() {

@@ -1,9 +1,11 @@
-package com.lemonthe.bookshelf.web;
+package com.lemonthe.bookshelf.web.services;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 
 import com.lemonthe.bookshelf.Book;
@@ -45,8 +47,8 @@ public class BookService {
         Photo result = new Photo();
         if (photo == null || photo.isEmpty()) {
             logger.info("photo is not present");
-            Optional<Book> tmp = bookRepo.findById(newBook.getId());
-            if (tmp.isPresent()) {
+            if (newBook.getId() != null) {
+                Optional<Book> tmp = bookRepo.findById(newBook.getId());
                 logger.info("Photo already exist");
                 return tmp.get().getPhoto();
             } else {
@@ -61,6 +63,13 @@ public class BookService {
         }
         return photoRepo.save(result);
     }
+    //private void setDefaultPhoto(Photo photo) throws IOException {
+    //    logger.info("Photo does not exist. Setting default");
+    //    Path filePath =
+    //        Paths.get("./src/main/resources/static/images/default.jpg");
+    //    byte[] def = Files.readAllBytes(filePath);
+    //    photo.setData(def);
+    //}
     //private Photo savePhoto(MultipartFile photo)
     //    throws IOException {
     //    if (!Files.exists(photoDirectory)) {
@@ -80,6 +89,14 @@ public class BookService {
         if (book.isEmpty())
             logger.info("getBookById there is not such book");
         return book.get();
+    }
+    public List<Book> getAllBooks() {
+        List<Book> result = new LinkedList<>();
+        bookRepo.findAll().forEach(i -> result.add(i));
+        return result;
+    }
+    public void deleteBookById(Long id) {
+        bookRepo.deleteById(id);
     }
 
 }

@@ -18,48 +18,24 @@
         <form th:action="@{/genres}"><button>Genres</button></form>
       </div>
     </header>
-    <form th:object="${new_author}" method="POST">
+    <form th:object="${mod_author}" method="POST" th:action="@{'/authors/update/'+${mod_author.id}}">
       <h2>Add new author</h2>
       <fieldset>
         <legend>New author</legend>
         <div>
           <label for="name">Name</label>
-          <input id="name" type="text" th:field="*{name}"/>
+          <input id="name" type="text" th:field="*{name}" th:text="*{name}"/>
           <span class="validation_error" th:if="${#fields.hasErrors('name')}", th:errors="*{name}"></span>
         </div>
         <div>
           <label for="birhtday">Parent</label>
-          <input id="birhtday" type="date" th:field="*{birthDay}"/>
+          <input id="birhtday" type="date" th:field="*{birthDay}" th:value="*{birthDay}"/>
           <span class="validation_error" th:if="${#fields.hasErrors('birthDay')}", th:errors="*{birthDay}"></span>
         </div>
         <div class="submit">
-          <button type="submit" name="save">Add</button>
+          <button type="submit" name="save">Modify</button>
         </div>
       </fieldset>
     </form>
-
-    <div class="booklist">
-      <h2>Author list</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Birthday</th>
-            <th>Operations</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr th:each="authori : ${all_authors}">
-            <td>
-              <a th:href="@{'/authors/modify/' + ${authori.id}}" th:text="${authori.name}"></a>
-            </td>
-            <td th:text="${authori.birthDay}"></td>
-            <td>
-              <a th:href="@{'/authors/delete/' + ${authori.id}}">Delete</a>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
   </body>
 </html>

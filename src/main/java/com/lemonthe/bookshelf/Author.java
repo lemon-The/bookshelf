@@ -3,16 +3,20 @@ package com.lemonthe.bookshelf;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+
 
 @Entity
 @Table(name = "AUTHORS")
@@ -28,6 +32,13 @@ public class Author implements Serializable {
     private String name;
     @NotNull(message = "Author birthday is required")
     private LocalDate birthDay;
+    @ManyToMany(mappedBy = "authors", cascade = CascadeType.ALL)
+    private List<Book> books;
+
+    public void addBook(Book book) {
+        books.add(book);
+    }
+    
     ////////////////////////////////////////////////////////////
     public void setId(Long id) {
         this.id = id;
@@ -38,6 +49,9 @@ public class Author implements Serializable {
     public void setBirthDay(LocalDate birthDay) {
         this.birthDay = birthDay;
     }
+    public void setBooks(List<Book> books) {
+        this.books = books;
+    }
     ////////////////////////////////////////////////////////////
     public Long getId() {
         return this.id;
@@ -47,6 +61,9 @@ public class Author implements Serializable {
     }
     public LocalDate getBirthDay() {
         return this.birthDay;
+    }
+    public List<Book> getBooks() {
+        return this.books;
     }
     ////////////////////////////////////////////////////////////
     @Override
@@ -60,11 +77,12 @@ public class Author implements Serializable {
         Author other = (Author)otherObject;
         return id == other.id
             && Objects.equals(name, other.name)
-            && Objects.equals(birthDay, other.birthDay);
+            && Objects.equals(birthDay, other.birthDay)
+            && Objects.equals(books, other.books);
     }
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, birthDay);
+        return Objects.hash(id, name, birthDay, books);
     }
     @Override
     public String toString() {

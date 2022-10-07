@@ -37,7 +37,7 @@ CREATE TABLE genres(
     name VARCHAR(60),
     parent_id INTEGER,
     CONSTRAINT fk_genres_parent FOREIGN KEY(parent_id)
-        REFERENCES genres(id)
+        REFERENCES genres(id) ON DELETE CASCADE
 );
 
 CREATE TABLE authors(
@@ -51,9 +51,9 @@ CREATE TABLE books_genres(
     genre_id INTEGER,
     PRIMARY KEY(book_id, genre_id),
     CONSTRAINT fk_books_genres_book_id FOREIGN KEY(book_id)
-        REFERENCES books(id),
+        REFERENCES books(id) ON DELETE CASCADE,
     CONSTRAINT fk_books_genres_genre_id FOREIGN KEY(genre_id)
-        REFERENCES genres(id)
+        REFERENCES genres(id) ON DELETE CASCADE
 );
 
 CREATE TABLE books_authors(
@@ -61,7 +61,7 @@ CREATE TABLE books_authors(
     author_id INTEGER,
     PRIMARY KEY(book_id, author_id),
     CONSTRAINT fk_books_authors_book_id FOREIGN KEY(book_id)
-        REFERENCES books(id),
+        REFERENCES books(id) ON DELETE CASCADE,
     CONSTRAINT fk_books_authors_author_id FOREIGN KEY(author_id)
-        REFERENCES authors(id)
+        REFERENCES authors(id) ON DELETE CASCADE
 );

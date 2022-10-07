@@ -1,4 +1,4 @@
-package com.lemonthe.bookshelf.web;
+package com.lemonthe.bookshelf.web.services;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -38,5 +38,8 @@ public class AuthorService {
         if (author.isEmpty())
             logger.info("getAuthorById there is not such author");
         return author.get();
+    }
+    public void deleteAuthorById(Long id) {
+        authorRepo.deleteById(id);;
     }
 }

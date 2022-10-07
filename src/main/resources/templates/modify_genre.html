@@ -18,13 +18,13 @@
         <form th:action="@{/genres}"><button>Genres</button></form>
       </div>
     </header>
-    <form th:object="${new_genre}" method="POST">
+    <form th:object="${mod_genre}" method="POST" th:action="@{'/genres/update/'+${mod_genre.id}}">
       <h2>Add new genre</h2>
       <fieldset>
         <legend>New genre</legend>
         <div>
           <label for="name">Name</label>
-          <input id="name" type="text" th:field="*{name}"/>
+          <input id="name" type="text" th:field="*{name}" th:text="*{name}" />
           <span class="validation_error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
         </div>
         <div>
@@ -40,45 +40,5 @@
         </div>
       </fieldset>
     </form>
-
-    <div class="booklist">
-      <h2>Genre list</h2>
-      <form th:action="@{/genres}">
-        <select th:name="genre_id">
-          <option th:text="all" th:value="null"></option>
-          <option th:each="gnr : ${all_genres}" th:text="${gnr.name}" th:value="${gnr.id}"></option>
-        </select>
-        <button type="submit" name="filter">Add</button>
-      </form>
-      <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Parent</th>
-            <th>Subgenres</th>
-            <th>Operations</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr th:each="genrei : ${genres_list}">
-            <td>
-              <a th:href="@{'/genres/modify/' + ${genrei.id}}" th:text="${genrei.name}"></a>
-            </td>
-            <td th:text="${genrei.parent.name}" th:if="${genrei.parent}"></td>
-            <td th:text="Root" th:unless="${genrei.parent}"></td>
-            <td>
-              <table>
-                <tr th:each="sub : ${genrei.subgenres}">
-                  <td th:text="${sub.name}"></td>
-                </tr>
-              </table>
-            </td>
-            <td>
-              <a th:href="@{'/genres/delete/' + ${genrei.id}}">Delete</a>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
   </body>
 </html>

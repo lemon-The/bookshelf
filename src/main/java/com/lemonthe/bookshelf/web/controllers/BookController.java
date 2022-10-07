@@ -1,4 +1,4 @@
-package com.lemonthe.bookshelf.web;
+package com.lemonthe.bookshelf.web.controllers;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -23,6 +23,7 @@ import com.lemonthe.bookshelf.data.AuthorRepository;
 import com.lemonthe.bookshelf.data.BookRepository;
 import com.lemonthe.bookshelf.data.GenreRepository;
 import com.lemonthe.bookshelf.data.PhotoRepository;
+import com.lemonthe.bookshelf.web.services.BookService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -180,6 +181,11 @@ public class BookController {
         logger.info("Book ID:" + newBook.getId());
         bookService.saveBook(newBook, photo);
         logger.info("Book: " + newBook.getTitle() + " is saved");
+        return "redirect:/books";
+    }
+    @GetMapping("/delete/{id}")
+    public String deleteBook(@PathVariable("id") Long id) {
+        bookService.deleteBookById(id);
         return "redirect:/books";
     }
 }
