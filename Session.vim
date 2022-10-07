@@ -18,7 +18,7 @@ badd +9 ../../planes/planes/src/main/resources/schema.sql
 badd +38 src/main/java/com/lemonthe/bookshelf/Book.java
 badd +30 src/main/java/com/lemonthe/bookshelf/Genre.java
 badd +1 src/main/java/com/lemonthe/bookshelf/Author.java
-badd +9 src/main/resources/data.sql
+badd +1 src/main/resources/data.sql
 badd +62 ../../warships2/warships/src/main/java/com/lemonthe/java/AddCommand.java
 badd +37 src/test/java/com/lemonthe/bookshelf/ApplicationTests.java
 badd +24 ../../planes/planes/src/test/java/com/lemonthe/planes/PlanesApplicationTests.java
@@ -30,13 +30,19 @@ badd +18 src/main/resources/application.yml
 badd +8 src/main/resources/templates/home.html
 badd +1 src/main/java/com/lemonthe/bookshelf/web/HomeController.java
 badd +67 ~/.config/nvim/init.vim
-badd +42 src/main/resources/templates/books.html
-badd +42 src/main/resources/templates/authors.html
-badd +49 src/main/resources/templates/genres.html
-badd +0 src/main/java/com/lemonthe/bookshelf/web/BookController.java
+badd +84 src/main/resources/templates/books.html
+badd +12 src/main/resources/templates/authors.html
+badd +12 src/main/resources/templates/genres.html
+badd +100 src/main/java/com/lemonthe/bookshelf/web/BookController.java
+badd +40 src/main/java/com/lemonthe/bookshelf/web/BookService.java
+badd +14 src/main/java/com/lemonthe/bookshelf/data/PathByStringConverter.java
+badd +18 src/main/java/com/lemonthe/bookshelf/Photo.java
 argglobal
 %argdel
 $argadd src/main/resources/schema.sql
+tabnew +setlocal\ bufhidden=wipe
+tabnew +setlocal\ bufhidden=wipe
+tabnew +setlocal\ bufhidden=wipe
 tabnew +setlocal\ bufhidden=wipe
 tabnew +setlocal\ bufhidden=wipe
 tabrewind
@@ -121,11 +127,11 @@ setlocal fdn=20
 setlocal fen
 silent! normal! zE
 let &fdl = &fdl
-let s:l = 1 - ((0 * winheight(0) + 5) / 11)
+let s:l = 63 - ((10 * winheight(0) + 5) / 11)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 1
+keepjumps 63
 normal! 04|
 wincmd w
 exe '1resize ' . ((&lines * 11 + 19) / 38)
@@ -145,12 +151,72 @@ setlocal fdn=20
 setlocal fen
 silent! normal! zE
 let &fdl = &fdl
-let s:l = 51 - ((0 * winheight(0) + 17) / 35)
+let s:l = 100 - ((17 * winheight(0) + 17) / 35)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 51
+keepjumps 100
+normal! 057|
+tabnext
+edit src/main/resources/templates/books.html
+argglobal
+balt src/main/java/com/lemonthe/bookshelf/web/BookController.java
+setlocal fdm=manual
+setlocal fde=0
+setlocal fmr={{{,}}}
+setlocal fdi=#
+setlocal fdl=0
+setlocal fml=1
+setlocal fdn=20
+setlocal fen
+silent! normal! zE
+let &fdl = &fdl
+let s:l = 84 - ((18 * winheight(0) + 17) / 35)
+if s:l < 1 | let s:l = 1 | endif
+keepjumps exe s:l
+normal! zt
+keepjumps 84
+normal! 034|
+tabnext
+edit src/main/java/com/lemonthe/bookshelf/web/BookService.java
+argglobal
+balt src/main/java/com/lemonthe/bookshelf/web/BookController.java
+setlocal fdm=manual
+setlocal fde=0
+setlocal fmr={{{,}}}
+setlocal fdi=#
+setlocal fdl=0
+setlocal fml=1
+setlocal fdn=20
+setlocal fen
+silent! normal! zE
+let &fdl = &fdl
+let s:l = 32 - ((9 * winheight(0) + 17) / 35)
+if s:l < 1 | let s:l = 1 | endif
+keepjumps exe s:l
+normal! zt
+keepjumps 32
 normal! 0
+tabnext
+edit src/main/java/com/lemonthe/bookshelf/Photo.java
+argglobal
+balt src/main/java/com/lemonthe/bookshelf/data/PathByStringConverter.java
+setlocal fdm=manual
+setlocal fde=0
+setlocal fmr={{{,}}}
+setlocal fdi=#
+setlocal fdl=0
+setlocal fml=1
+setlocal fdn=20
+setlocal fen
+silent! normal! zE
+let &fdl = &fdl
+let s:l = 72 - ((23 * winheight(0) + 17) / 35)
+if s:l < 1 | let s:l = 1 | endif
+keepjumps exe s:l
+normal! zt
+keepjumps 72
+normal! 020|
 tabnext
 edit src/main/resources/schema.sql
 let s:save_splitbelow = &splitbelow
@@ -183,12 +249,12 @@ setlocal fdn=20
 setlocal fen
 silent! normal! zE
 let &fdl = &fdl
-let s:l = 18 - ((12 * winheight(0) + 17) / 35)
+let s:l = 26 - ((20 * winheight(0) + 17) / 35)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 18
-normal! 02|
+keepjumps 26
+normal! 021|
 wincmd w
 argglobal
 if bufexists(fnamemodify("src/main/resources/data.sql", ":p")) | buffer src/main/resources/data.sql | else | edit src/main/resources/data.sql | endif
@@ -206,16 +272,16 @@ setlocal fdn=20
 setlocal fen
 silent! normal! zE
 let &fdl = &fdl
-let s:l = 20 - ((18 * winheight(0) + 17) / 35)
+let s:l = 1 - ((0 * winheight(0) + 17) / 35)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 20
-normal! 0
+keepjumps 1
+normal! 0100|
 wincmd w
 exe 'vert 1resize ' . ((&columns * 73 + 73) / 147)
 exe 'vert 2resize ' . ((&columns * 73 + 73) / 147)
-tabnext 3
+tabnext 2
 if exists('s:wipebuf') && len(win_findbuf(s:wipebuf)) == 0 && getbufvar(s:wipebuf, '&buftype') isnot# 'terminal'
   silent exe 'bwipe ' . s:wipebuf
 endif

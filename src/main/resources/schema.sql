@@ -16,13 +16,11 @@ CREATE SEQUENCE IF NOT EXISTS book_sequence
 CREATE SEQUENCE IF NOT EXISTS photo_sequence
     START WITH 1
     INCREMENT 1;
-CREATE SEQUENCE IF NOT EXISTS file_sequence
-    START WITH 1
-    INCREMENT 1;
 
 CREATE TABLE photos(
     id INTEGER PRIMARY KEY,
-    photo_path VARCHAR(300)
+    photo_data BLOB--,
+    --photo_path VARCHAR(300)
 );
 
 CREATE TABLE books(
@@ -32,14 +30,6 @@ CREATE TABLE books(
     photo_id INTEGER,
     CONSTRAINT fk_books_photo FOREIGN KEY(photo_id)
         REFERENCES photos(id)
-);
-
-CREATE TABLE files(
-    id INTEGER PRIMARY KEY,
-    file_path VARCHAR(300),
-    book_id INTEGER,
-    CONSTRAINT fk_files_book FOREIGN KEY(book_id)
-        REFERENCES books(id)
 );
 
 CREATE TABLE genres(

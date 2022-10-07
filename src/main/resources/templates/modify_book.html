@@ -18,18 +18,18 @@
         <form th:action="@{/genres}"><button>Genres</button></form>
       </div>
     </header>
-    <form th:object="${new_book}" method="POST" th:action="@{/books/upload}" enctype="multipart/form-data">
+    <form th:object="${mod_book}" method="POST" th:action="@{'/books/update/'+${mod_book.id}}" enctype="multipart/form-data">
       <h2>Add new book</h2>
       <fieldset>
         <legend>New book</legend>
         <div>
           <label for="title">Title</label>
-          <input id="title" type="text" th:field="*{title}"/>
+          <input id="title" type="text" th:field="*{title}" th:text="*{title}"/>
           <span class="validation_error" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></span>
         </div>
         <div>
           <label for="annotation">Annotation</label>
-          <textarea id="annotation" th:field="*{annotation}"></textarea>
+          <textarea id="annotation" th:field="*{annotation}" th:text="*{annotation}"></textarea>
         </div>
         <div>
           <label for="new_photo">Photo</label>
@@ -50,59 +50,9 @@
           <span class="validation_error" th:if="${#fields.hasErrors('authors')}" th:errors="*{authors}"></span>
         </div>
         <div class="submit">
-          <button type="submit" name="save">Add</button>
+          <button type="submit" name="save">Modify</button>
         </div>
       </fieldset>
     </form>
-
-    <div class="booklist">
-      <h2>Book list</h2> 
-      <form th:action="@{/books}">
-        <select th:name="author_id">
-          <option th:text="all" th:value="null"></option>
-          <option th:each="autr : ${all_authors}" th:text="${autr.name}" th:value="${autr.id}"></option>
-        </select>
-        <select th:name="genre_id">
-          <option th:text="all" th:value="null"></option>
-          <option th:each="gnr : ${all_genres}" th:text="${gnr.name}" th:value="${gnr.id}"></option>
-        </select>
-        <button type="submit" name="filter">Add</button>
-      </form>
-      <table>
-        <thead>
-          <tr>
-            <th>Cover</th>
-            <th>Title</th>
-            <th>Authors</th>
-            <th>Genres</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr th:each="booki : ${books}">
-            <td>
-              <img alt="book logo" title="book logo" 
-                th:src="@{'/books/cover/'+ ${booki.id}}" style="width: 100px;"/>
-            </td>
-            <td>
-              <a th:href="@{'/books/modify/' + ${booki.id}}" th:text="${booki.title}"></a>
-            </td>
-            <td>
-              <table>
-                <tr th:each="author : ${booki.authors}">
-                  <td th:text="${author.name}"></td>
-                </tr>
-              </table>
-            </td>
-            <td>
-              <table>
-                <tr th:each="genre : ${booki.genres}">
-                  <td th:text="${genre.name}"></td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
   </body>
 </html>

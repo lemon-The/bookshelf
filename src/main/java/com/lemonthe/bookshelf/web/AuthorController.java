@@ -13,29 +13,29 @@ import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/authors")
 public class AuthorController {
-    private AuthorRepository repo;
+    private AuthorService authorService;
     private Logger logger;
 
     @Autowired
-    public AuthorController(AuthorRepository repo) {
-        this.repo = repo;
+    public AuthorController(AuthorService authorService) {
+        this.authorService = authorService;
         logger = LoggerFactory.getLogger(AuthorController.class);
     }
 
     @ModelAttribute(name = "all_authors")
     public List<Author> allAouthorsModel() {
-        List<Author> authors = new LinkedList<>();
-        repo.findAll().forEach(i -> authors.add(i));
-        return authors;
+        return authorService.getAllAuthors();
     }
     @ModelAttribute(name = "new_author")
     public Author newAuthorModel() {
@@ -53,8 +53,25 @@ public class AuthorController {
         logger.info(getClass().getName() + " POST request");
         if (errors.hasErrors())
             return "authors";
-        repo.save(newAuthor);
+        authorService.saveAuthor(newAuthor);
         logger.info("Author: " + newAuthor.getName() + " is saved");
+        return "redirect:/authors";
+    }
+
+    @GetMapping("/modify/{id}")
+    public String showModifyPage(@PathVariable("id") Long id,
+            Model model) {
+        Author modAuthor = authorService.getAuthoById(id);
+        model.addAttribute("mod_author", modAuthor); 
+        logger.info("Author ID:" + id);
+        return "modify_author";
+    }
+    @PostMapping("/update/{id}")
+    public String modifyAuthor(@PathVariable("id") Long id,
+            Author modifiedAuthor) {
+        modifiedAuthor.setId(id);
+        logger.warn("AUTHOR ID:" + modifiedAuthor.getId());
+        authorService.saveAuthor(modifiedAuthor);
         return "redirect:/authors";
     }
 }

@@ -42,7 +42,7 @@ public class Book implements Serializable {
     //    }
     //)
     @Column(nullable = false)
-    private long id;
+    private Long id;
     @NotEmpty(message = "Book title is required")
     private String title;
     private String annotation;
@@ -72,7 +72,7 @@ public class Book implements Serializable {
     }
 
     ////////////////////////////////////////////////////////////
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
     public void setTitle(String title) {
@@ -91,7 +91,7 @@ public class Book implements Serializable {
         this.photo = photo;
     }
     ////////////////////////////////////////////////////////////    
-    public long getId() {
+    public Long getId() {
         return this.id;
     }
     public String getTitle() {
@@ -119,7 +119,7 @@ public class Book implements Serializable {
         if (getClass() != otherObject.getClass())
             return false;
         Book other = (Book)otherObject;
-        return id == other.id
+        return Objects.equals(id, other.id)
             && Objects.equals(title, other.title)
             && Objects.equals(annotation, other.annotation)
             && Objects.equals(genres, other.genres)
