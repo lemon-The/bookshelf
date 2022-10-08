@@ -3,13 +3,12 @@
       xmlns:th="http://www.thymeleaf.org">
   <head>
     <title>Main</title>
-    <link rel="stylesheet" th:href="@{/books.css}" />
+    <link rel="stylesheet" th:href="@{/styles.css}"/>
     </head>
   <body>
     <header>
       <div>
-        <img src="images/books2.jpg" alt="STSM logo" title="STSM logo" 
-             th:src="@{/images/books2.jpg}" th:alt-title="#{title.application}"/>
+        <img alt="Bookshelf logo"  th:src="@{/images/books2.jpg}"/>
       </div>
       <div id="bookshelf">
         <h1>BOOKSHELF</h1>
@@ -24,16 +23,15 @@
         <legend>New genre</legend>
         <div>
           <label for="name">Name</label>
-          <input id="name" type="text" th:field="*{name}" th:text="*{name}" />
-          <span class="validation_error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+          <input id="name" type="text" th:field="*{name}" th:value="*{name}" />
         </div>
+        <div class="validation_error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
         <div>
           <label for="parent">Parent</label>
           <select th:field="*{parent}" id="parent">
             <option th:text="root" th:value="null"></option>
-            <option th:each="genrei : ${all_genres}" th:value="${genrei.id}" th:text="${genrei.name}"></option>
+            <option th:each="genre : ${all_genres}" th:value="${genre.id}" th:text="${genre.name}"></option>
           </select>
-          <span class="validation_error" th:if="${#fields.hasErrors('parent')}" th:errors="*{parent}"></span>
         </div>
         <div class="submit">
           <button type="submit" name="save">Add</button>

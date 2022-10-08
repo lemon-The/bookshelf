@@ -38,7 +38,6 @@ public class Author implements Serializable {
     public void addBook(Book book) {
         books.add(book);
     }
-    
     ////////////////////////////////////////////////////////////
     public void setId(Long id) {
         this.id = id;
@@ -77,12 +76,11 @@ public class Author implements Serializable {
         Author other = (Author)otherObject;
         return id == other.id
             && Objects.equals(name, other.name)
-            && Objects.equals(birthDay, other.birthDay)
-            && Objects.equals(books, other.books);
+            && Objects.equals(birthDay, other.birthDay);
     }
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, birthDay, books);
+        return Objects.hash(id, name, birthDay);
     }
     @Override
     public String toString() {

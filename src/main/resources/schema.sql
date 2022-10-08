@@ -26,7 +26,7 @@ CREATE TABLE photos(
 CREATE TABLE books(
     id INTEGER PRIMARY KEY,
     title VARCHAR(60),
-    annotation VARCHAR(1000),
+    --annotation VARCHAR(1000),
     photo_id INTEGER,
     CONSTRAINT fk_books_photo FOREIGN KEY(photo_id)
         REFERENCES photos(id)

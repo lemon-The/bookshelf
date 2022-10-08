@@ -6,8 +6,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Parameter;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
@@ -43,21 +41,11 @@ public class Genre implements Serializable {
     private Long id;
     @NotBlank(message = "Genre name is required")
     private String name;
-
-    //@OneToMany(mappedBy = "parent")
-    //private List<Genre> subgenres = new LinkedList<>();
-    
     @OneToMany(mappedBy = "parent")
     private List<Genre> subgenres = new LinkedList<>();
-
-    //@OneToMany
-    //@JoinColumn()
-    //private List<Genre> subgenres = new LinkedList<>();
-
     @ManyToOne
     @JoinColumn(name = "parent_id")
     private Genre parent;
-
     @ManyToMany(mappedBy = "genres", cascade = CascadeType.ALL)
     private List<Book> books;
 
@@ -112,12 +100,11 @@ public class Genre implements Serializable {
         return Objects.equals(id, other.id)
             && Objects.equals(name, other.name)
             && Objects.equals(parent, other.parent)
-            && Objects.equals(subgenres, other.subgenres)
-            && Objects.equals(books, other.books);
+            && Objects.equals(subgenres, other.subgenres);
     }
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, parent, subgenres, books);
+        return Objects.hash(id, name, parent, subgenres);
     }
     @Override
     public String toString() {

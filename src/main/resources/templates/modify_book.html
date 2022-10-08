@@ -3,13 +3,12 @@
       xmlns:th="http://www.thymeleaf.org">
   <head>
     <title>Main</title>
-    <link rel="stylesheet" th:href="@{/books.css}" />
+    <link rel="stylesheet" th:href="@{/styles.css}"/>
   </head>
   <body>
     <header>
       <div>
-        <img src="images/books3.jpg" alt="STSM logo" title="STSM logo" 
-             th:src="@{/images/books2.jpg}" th:alt-title="#{title.application}"/>
+        <img alt="Bookshelf logo" th:src="@{/images/books2.jpg}"/>
       </div>
       <div id="bookshelf">
         <h1>BOOKSHELF</h1>
@@ -24,13 +23,9 @@
         <legend>New book</legend>
         <div>
           <label for="title">Title</label>
-          <input id="title" type="text" th:field="*{title}" th:text="*{title}"/>
-          <span class="validation_error" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></span>
+          <input id="title" type="text" th:field="*{title}" th:value="*{title}"/>
         </div>
-        <div>
-          <label for="annotation">Annotation</label>
-          <textarea id="annotation" th:field="*{annotation}" th:text="*{annotation}"></textarea>
-        </div>
+        <div class="validation_error" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
         <div>
           <label for="new_photo">Photo</label>
           <input type="file" id="new_photo" accept="images/*" th:name="new_photo"></input>
@@ -40,15 +35,15 @@
           <select th:field="*{genres}" multiple id="genre">
             <option th:each="genre : ${all_genres}" th:value="${genre.id}" th:text="${genre.name}"></option>
           </select>
-          <span class="validation_error" th:if="${#fields.hasErrors('genres')}" th:errors="*{genres}"></span>
         </div>
+        <div class="validation_error" th:if="${#fields.hasErrors('genres')}" th:errors="*{genres}"></div>
         <div>
           <label for="author">Authors</label>
           <select role="combobox" th:field="*{authors}" multiple id="author">
             <option th:each="author : ${all_authors}" th:value="${author.id}" th:text="${author.name}"></option>
           </select>
-          <span class="validation_error" th:if="${#fields.hasErrors('authors')}" th:errors="*{authors}"></span>
         </div>
+        <div class="validation_error" th:if="${#fields.hasErrors('authors')}" th:errors="*{authors}"></div>
         <div class="submit">
           <button type="submit" name="save">Modify</button>
         </div>

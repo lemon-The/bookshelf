@@ -8,7 +8,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
+import com.lemonthe.bookshelf.Author;
 import com.lemonthe.bookshelf.Book;
+import com.lemonthe.bookshelf.Genre;
 import com.lemonthe.bookshelf.Photo;
 import com.lemonthe.bookshelf.data.BookRepository;
 import com.lemonthe.bookshelf.data.PhotoRepository;
@@ -24,71 +26,77 @@ import org.slf4j.LoggerFactory;
 public class BookService {
     private BookRepository bookRepo;
     private PhotoRepository photoRepo;
-    private Path photoDirectory;
+    private AuthorService authorService;
+    private GenreService genreService;
     private Logger logger;
 
     @Autowired
-    public BookService(BookRepository bookRepo,
-            PhotoRepository photoRepo) {
+    public BookService(BookRepository bookRepo, PhotoRepository photoRepo,
+            AuthorService authorService, GenreService genreService) {
         this.bookRepo = bookRepo;
         this.photoRepo = photoRepo;
-        this.photoDirectory = Paths.get("./target/classes/static/images/books_covers");
+        this.authorService = authorService;
+        this.genreService = genreService;
         logger = LoggerFactory.getLogger(BookService.class);
     }
 
     public Book saveBook(Book newBook, MultipartFile photo)
             throws IOException {
+        logger.debug("Saving book");
         Photo savedPhoto = savePhoto(newBook, photo);
-        logger.info("Photo " + savedPhoto.getId() + " is saved");
+        logger.debug("Photo with id=" + savedPhoto.getId() + " is saved");
         newBook.setPhoto(savedPhoto);
         return bookRepo.save(newBook);
     }
     private Photo savePhoto(Book newBook, MultipartFile photo) throws IOException {
+        logger.debug("Saving photo");
         Photo result = new Photo();
         if (photo == null || photo.isEmpty()) {
-            logger.info("photo is not present");
-            if (newBook.getId() != null) {
-                Optional<Book> tmp = bookRepo.findById(newBook.getId());
-                logger.info("Photo already exist");
+            logger.debug("New photo is not present");
+            Long id = newBook.getId();
+            if (id != null) {
+                Optional<Book> tmp = bookRepo.findById(id);
+                logger.info("Photo with id=" + id + " already exists");
                 return tmp.get().getPhoto();
             } else {
-                logger.info("Photo does not exist. Setting default");
+                logger.info("Photo does not exist. Setting default photo");
                 Path filePath =
                     Paths.get("./src/main/resources/static/images/default.jpg");
                 byte[] def = Files.readAllBytes(filePath);
                 result.setData(def);
             }
         } else {
+            logger.debug("New photo is present. Saving");
             result.setData(photo.getBytes());
         }
         return photoRepo.save(result);
     }
-    //private void setDefaultPhoto(Photo photo) throws IOException {
-    //    logger.info("Photo does not exist. Setting default");
-    //    Path filePath =
-    //        Paths.get("./src/main/resources/static/images/default.jpg");
-    //    byte[] def = Files.readAllBytes(filePath);
-    //    photo.setData(def);
-    //}
-    //private Photo savePhoto(MultipartFile photo)
-    //    throws IOException {
-    //    if (!Files.exists(photoDirectory)) {
-    //        Files.createDirectory(photoDirectory);
-    //    }
-    //    Path fileName = Paths.get(photo.getOriginalFilename());
-    //    Path fullFileName = photoDirectory.resolve(fileName);
-    //    Files.write(fullFileName, photo.getBytes());
-    //    Photo newPhoto = new Photo();
-    //    newPhoto.setPath(fullFileName);
-    //    logger.info("Saving " + fullFileName.toString());
-    //    return photoRepo.save(newPhoto);
-    //}
 
     public Book getBookById(Long id) {
         Optional<Book> book = bookRepo.findById(id);
         if (book.isEmpty())
-            logger.info("getBookById there is not such book");
+            logger.warn("Book with id=" + id + " does not exist");
         return book.get();
+    }
+    public List<Book> getBooksByAuthorId(Long id) {
+        Author athr = authorService.getAuthorById(id);
+        List<Book> result = new LinkedList<>();
+        if (athr == null) {
+            logger.warn("Author with id=" + id + " does not exist");
+        } else {
+            bookRepo.findByAuthors(athr).forEach(i -> result.add(i));
+        }
+        return result;
+    }
+    public List<Book> getBooksByGenreId(Long id) {
+        Genre gnr = genreService.getGenreById(id);
+        List<Book> result = new LinkedList<>();
+        if (gnr == null) {
+            logger.warn("Gerne with id=" + id + " does not exist");
+        } else {
+            bookRepo.findByGenres(gnr).forEach(i -> result.add(i));
+        }
+        return result;
     }
     public List<Book> getAllBooks() {
         List<Book> result = new LinkedList<>();
@@ -96,7 +104,8 @@ public class BookService {
         return result;
     }
     public void deleteBookById(Long id) {
+        logger.debug("Deleting book with id=" + id);
         bookRepo.deleteById(id);
+        logger.debug("Book with id=" + id + " is deleted");
     }
-
 }

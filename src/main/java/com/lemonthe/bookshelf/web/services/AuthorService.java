@@ -1,6 +1,5 @@
 package com.lemonthe.bookshelf.web.services;
 
-import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -26,20 +25,25 @@ public class AuthorService {
     }
 
     public Author saveAuthor(Author newAuthor) {
+        logger.debug("Saving author");
         return authorRepo.save(newAuthor);
     }
     public List<Author> getAllAuthors() {
         List<Author> result = new LinkedList<>();
         authorRepo.findAll().forEach(i -> result.add(i));
+        if (result.isEmpty())
+            logger.warn("There are no authors");
         return result;
     }
-    public Author getAuthoById(Long id) {
+    public Author getAuthorById(Long id) {
         Optional<Author> author = authorRepo.findById(id);
         if (author.isEmpty())
-            logger.info("getAuthorById there is not such author");
+            logger.info("Author with id=" + id + " does not exist");
         return author.get();
     }
     public void deleteAuthorById(Long id) {
-        authorRepo.deleteById(id);;
+        logger.debug("Deleting author with id=" + id);
+        authorRepo.deleteById(id);
+        logger.debug("Author with id=" + id + " is deleted");
     }
 }

@@ -1,9 +1,5 @@
 package com.lemonthe.bookshelf;
 
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Parameter;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -18,7 +14,6 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 import java.io.Serializable;
 import java.util.LinkedList;
@@ -45,14 +40,9 @@ public class Book implements Serializable {
     //)
     @Column(nullable = false)
     private Long id;
-    @NotEmpty(message = "Book title is required")
+    @NotBlank(message = "Book title is required")
     private String title;
-    private String annotation;
-    //private int pages;
-    @ManyToOne
-    @JoinColumn(name = "PHOTO_ID", referencedColumnName = "ID")
-    private Photo photo;
-    @NotNull(message = "Book genre is required")
+    @NotEmpty(message = "Book genre is required")
     @ManyToMany
     @JoinTable(name = "BOOKS_GENRES",
             joinColumns = @JoinColumn(name = "BOOK_ID"),
@@ -64,6 +54,9 @@ public class Book implements Serializable {
             joinColumns = @JoinColumn(name = "BOOK_ID"),
             inverseJoinColumns = @JoinColumn(name = "AUTHOR_ID"))
     private List<Author> authors = new LinkedList<>();
+    @ManyToOne
+    @JoinColumn(name = "PHOTO_ID", referencedColumnName = "ID")
+    private Photo photo;
     
 
     public void addGenre(Genre genre) {
@@ -80,9 +73,6 @@ public class Book implements Serializable {
     public void setTitle(String title) {
         this.title = title;
     }
-    public void setAnnotation(String annotation) {
-        this.annotation = annotation;
-    }
     public void setGenres(List<Genre> genres) {
         this.genres = genres;
     }
@@ -98,9 +88,6 @@ public class Book implements Serializable {
     }
     public String getTitle() {
         return this.title;
-    }
-    public String getAnnotation() {
-        return this.annotation;
     }
     public List<Genre> getGenres() {
         return this.genres;
@@ -123,21 +110,18 @@ public class Book implements Serializable {
         Book other = (Book)otherObject;
         return Objects.equals(id, other.id)
             && Objects.equals(title, other.title)
-            && Objects.equals(annotation, other.annotation)
             && Objects.equals(genres, other.genres)
             && Objects.equals(authors, other.authors)
             && Objects.equals(photo, other.photo);
     }
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, annotation, genres,
-                authors, photo);
+        return Objects.hash(id, title, genres, authors, photo);
     }
     @Override
     public String toString() {
         return getClass().getName() + "[id=" + id
             + ", title=" + title
-            + ", annotation=" + annotation
             + ", genres=" + genres
             + ", photo=" + photo
             + ", authors=" + authors + "]";

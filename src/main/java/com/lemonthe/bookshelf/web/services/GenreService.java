@@ -26,20 +26,25 @@ public class GenreService {
     }
 
     public Genre saveGenre(Genre newGenre) {
+        logger.debug("Saving genre");
         return genreRepo.save(newGenre);
     }
     public List<Genre> getAllGenres() {
         List<Genre> result = new LinkedList<>();
         genreRepo.findAll().forEach(i -> result.add(i));
+        if (result.isEmpty())
+            logger.warn("There are no genres");
         return result;
     }
-    public Genre getAuthoById(Long id) {
+    public Genre getGenreById(Long id) {
         Optional<Genre> genre = genreRepo.findById(id);
         if (genre.isEmpty())
-            logger.info("getGenreById there is not such genre");
+            logger.info("Genre with id=" + id + " does not exist");
         return genre.get();
     }
     public void deleteGenreById(Long id) {
+        logger.debug("Deleting genre with id=" + id);
         genreRepo.deleteById(id);
+        logger.debug("Genre with id=" + id + " is deleted");
     }
 }

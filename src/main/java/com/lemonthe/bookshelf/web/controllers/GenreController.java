@@ -2,11 +2,11 @@ package com.lemonthe.bookshelf.web.controllers;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 import javax.validation.Valid;
 
 import com.lemonthe.bookshelf.Genre;
-import com.lemonthe.bookshelf.data.GenreRepository;
 import com.lemonthe.bookshelf.web.services.GenreService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +48,8 @@ public class GenreController {
     public String genreGetMethod(
             @RequestParam(name = "genre_id", required = false) Long genre_id,
             Model model) {
+        logger.debug("GET /genres/ is called with id="
+                + Objects.toString(genre_id, "0"));
         List<Genre> allGenres = genreService.getAllGenres();
         if (genre_id != null) {
             List<Genre> reduced = new LinkedList<>();
@@ -56,14 +58,13 @@ public class GenreController {
                     addAllSubgenresToList(genre, reduced);
                 }
             }
-            logger.info("Genres: " + allGenres);
             model.addAttribute("genres_list", reduced);
         } else {
             model.addAttribute("genres_list", allGenres);
         }
+        logger.debug("Attribute \"genres_list\" is populated");
         return "genres";
     }
-
     private void addAllSubgenresToList(Genre current, List<Genre> list) {
         if (current == null)
             return;
@@ -73,36 +74,49 @@ public class GenreController {
         for (Genre sub : current.getSubgenres())
             addAllSubgenresToList(sub, list);
     }
+    @GetMapping("/delete/{id}")
+    public String deleteGenre(@PathVariable("id") Long id) {
+        logger.debug("GET /genes/delete/id is called with id=" + id);
+        genreService.deleteGenreById(id);
+        logger.info("Genre with id=" + id + " is deleted");
+        return "redirect:/genres";
+    }
+    @GetMapping("/modify/{id}")
+    public String showModifyPage(@PathVariable("id") Long id,
+            Model model) {
+        logger.debug("GET /genres/modify/id is called with id=" + id);
+        Genre modGenre = genreService.getGenreById(id);
+        model.addAttribute("mod_genre", modGenre); 
+        logger.debug("Attribute \"mod_genre\" is populated");
+        return "modify_genre";
+    }
 
     @PostMapping
-    public String genrePostMethod(@Valid Genre newGenre, Errors errors) {
-        if (errors.hasErrors())
+    public String genrePostMethod(@Valid @ModelAttribute("new_genre")
+            Genre newGenre, Errors errors) {
+        logger.debug("POST /genres/ is called");
+        if (errors.hasErrors()) {
+            logger.error("/genres/: errors are occurred");
             return "genres";
-        //repo.save(newGenre);
+        }
         genreService.saveGenre(newGenre);
         logger.info("Genre: " + newGenre.getName() + " is saved");
         return "redirect:/genres";
     }
-
-    @GetMapping("/modify/{id}")
-    public String showModifyPage(@PathVariable("id") Long id,
-            Model model) {
-        Genre modGenre = genreService.getAuthoById(id);
-        model.addAttribute("mod_genre", modGenre); 
-        logger.info("Genre ID:" + id);
-        return "modify_genre";
-    }
     @PostMapping("/update/{id}")
     public String modifyGenre(@PathVariable("id") Long id,
-            Genre modifiedGenre) {
+            @Valid @ModelAttribute("mod_genre") Genre modifiedGenre, 
+            Errors errors, Model model) {
+        logger.debug("POST /genres/update/id is called with id=" + id);
+        if (errors.hasErrors()) {
+            modifiedGenre.setId(id);
+            model.addAttribute("mod_genre", modifiedGenre);
+            logger.error("/genres/update/id: errors are occurred");
+            return "genres";
+        }
         modifiedGenre.setId(id);
-        logger.warn("GENRE ID:" + modifiedGenre.getId());
         genreService.saveGenre(modifiedGenre);
-        return "redirect:/genres";
-    }
-    @GetMapping("/delete/{id}")
-    public String deleteGenre(@PathVariable("id") Long id) {
-        genreService.deleteGenreById(id);
+        logger.info("Genre with id=" + id + " is saved");
         return "redirect:/genres";
     }
 }

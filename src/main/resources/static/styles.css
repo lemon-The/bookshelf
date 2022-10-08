@@ -12,6 +12,11 @@ body {
   width: 850px;
 }
 
+.validation_error {
+    color: red;
+    margin-left: 270px;
+}
+
 body header {
   background-color: #99cc33;
   padding: 20px;
