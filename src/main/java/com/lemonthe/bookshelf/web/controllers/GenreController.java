@@ -112,7 +112,7 @@ public class GenreController {
             modifiedGenre.setId(id);
             model.addAttribute("mod_genre", modifiedGenre);
             logger.error("/genres/update/id: errors are occurred");
-            return "genres";
+            return "modify_genre";
         }
         modifiedGenre.setId(id);
         genreService.saveGenre(modifiedGenre);

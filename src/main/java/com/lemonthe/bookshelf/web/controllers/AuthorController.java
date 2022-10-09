@@ -83,7 +83,7 @@ public class AuthorController {
             modifiedAuthor.setId(id);
             model.addAttribute("mod_author", modifiedAuthor);
             logger.error("/authors/update/id: errors are occurred");
-            return "authors";
+            return "modify_author";
         }
         modifiedAuthor.setId(id);
         authorService.saveAuthor(modifiedAuthor);
