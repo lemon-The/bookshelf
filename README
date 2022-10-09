@@ -1,0 +1,22 @@
+Bookshelf
+=========
+This project has made for educational purposes. You may do whatever you
+want with it.
+
+Description
+===========
+Spring and Thymeleaf application for book management
+
+Installation
+============
+Clone 'Bookshelf' repo and build this project by Maven:
+    $ mvn compile package
+Then start server:
+    $ java -jar target/bookshelf-0.0.1-SNAPSHOT.jar
+
+Usage
+=====
+Type http://localhost:8080/ address in your browser.
+You will see main page of the "Bookshelf application". Now you
+can add your book, modify or delete already existing ones. You
+can also do same operations for authors and genres
